@@ -1,0 +1,6 @@
+@PhishGuardAI.Api_HostAddress = http://localhost:5223
+
+GET {{PhishGuardAI.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
