@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/PhishGuardAI.Api/PhishGuardAI.Api.csproj" />
+  </Folder>
+</Solution>
