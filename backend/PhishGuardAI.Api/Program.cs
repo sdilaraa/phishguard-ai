@@ -18,6 +18,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped<PhishGuardAI.Api.Services.UrlAnalysis.UrlAnalysisService>();
 builder.Services.AddScoped<PhishGuardAI.Api.Services.EmailAnalysis.EmailAnalysisService>();
+builder.Services.AddSingleton<PhishGuardAI.Api.Services.History.AnalysisHistoryService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
