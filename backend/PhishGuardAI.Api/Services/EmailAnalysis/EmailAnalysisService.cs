@@ -175,12 +175,20 @@ public class EmailAnalysisService
             ? "E-posta içeriğinde temel kurallara göre belirgin bir risk göstergesi bulunmadı."
             : "E-posta içeriğinde bir veya daha fazla risk göstergesi tespit edildi.";
 
+        var recommendation = level switch
+        {
+            "High" => "Bu e-postadaki bağlantılara tıklamayın ve kişisel bilgilerinizi paylaşmayın. Mesajı resmi kanaldan doğrulayın.",
+            "Medium" => "E-postadaki gönderen adresini, bağlantıları ve istenen bilgileri dikkatlice kontrol edin. Şüpheli durumlarda işlem yapmadan doğrulama alın.",
+            _ => "Belirgin bir risk göstergesi bulunmadı; yine de e-posta bağlantılarını ve gönderen adresini kontrol etmek iyi bir güvenlik alışkanlığıdır."
+        };
+
         return new AnalysisResponse
         {
             AnalysisType = "Email",
             RiskScore = score,
             RiskLevel = level,
             Summary = summary,
+            Recommendation = recommendation,
             Findings = findings,
             AnalyzedAtUtc = DateTime.UtcNow
         };

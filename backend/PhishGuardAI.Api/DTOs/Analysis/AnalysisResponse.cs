@@ -6,6 +6,7 @@ public class AnalysisResponse
     public int RiskScore { get; set; }
     public string RiskLevel { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
+    public string Recommendation { get; set; } = string.Empty;
     public List<RiskFindingDto> Findings { get; set; } = [];
     public DateTime AnalyzedAtUtc { get; set; } = DateTime.UtcNow;
 }

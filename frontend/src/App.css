@@ -292,3 +292,23 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+
+.recommendation-box {
+  margin: 16px 0 20px;
+  padding: 18px;
+  border-radius: 20px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.recommendation-box strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #1d4ed8;
+}
+
+.recommendation-box p {
+  margin: 0;
+  color: #334155;
+}

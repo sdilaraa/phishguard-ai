@@ -14,6 +14,7 @@ type AnalysisResponse = {
   riskScore: number
   riskLevel: string
   summary: string
+  recommendation: string
   findings: RiskFinding[]
   analyzedAtUtc: string
 }
@@ -227,6 +228,11 @@ function App() {
                 </div>
 
                 <p className="summary">{result.summary}</p>
+
+                <div className="recommendation-box">
+                  <strong>Güvenlik Önerisi</strong>
+                  <p>{result.recommendation}</p>
+                </div>
 
                 <div className="findings">
                   <h3>Tespit Edilen Bulgular</h3>

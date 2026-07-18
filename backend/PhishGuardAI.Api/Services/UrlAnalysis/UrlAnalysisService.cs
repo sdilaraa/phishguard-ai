@@ -170,12 +170,20 @@ public class UrlAnalysisService
             ? "Bağlantıda temel kurallara göre belirgin bir risk göstergesi bulunmadı."
             : "Bağlantıda bir veya daha fazla risk göstergesi tespit edildi.";
 
+        var recommendation = level switch
+        {
+            "High" => "Bu bağlantıya tıklamayın. Göndereni ve bağlantı adresini resmi kanallardan doğrulamadan işlem yapmayın.",
+            "Medium" => "Bağlantıya dikkatli yaklaşın. Alan adını, HTTPS kullanımını ve bağlantının sizi beklenen adrese yönlendirip yönlendirmediğini kontrol edin.",
+            _ => "Belirgin bir risk göstergesi bulunmadı; yine de bağlantıya tıklamadan önce göndereni ve alan adını kontrol edin."
+        };
+
         return new AnalysisResponse
         {
             AnalysisType = "Url",
             RiskScore = score,
             RiskLevel = level,
             Summary = summary,
+            Recommendation = recommendation,
             Findings = findings,
             AnalyzedAtUtc = DateTime.UtcNow
         };
