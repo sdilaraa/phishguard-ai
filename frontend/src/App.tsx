@@ -19,6 +19,16 @@ type AnalysisResponse = {
   analyzedAtUtc: string
 }
 
+type AnalysisHistoryItem = {
+  analysisId: string
+  analysisType: string
+  inputPreview: string
+  riskScore: number
+  riskLevel: string
+  summary: string
+  analyzedAtUtc: string
+}
+
 const API_BASE_URL = 'http://localhost:5223'
 
 function App() {
@@ -28,8 +38,31 @@ function App() {
   const [sender, setSender] = useState('security@example.com')
   const [body, setBody] = useState('Hesabınız bugün içinde askıya alınacak. Hemen giriş yaparak şifrenizi doğrulayın.')
   const [result, setResult] = useState<AnalysisResponse | null>(null)
+  const [history, setHistory] = useState<AnalysisHistoryItem[]>([])
   const [error, setError] = useState('')
+  const [historyError, setHistoryError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false)
+
+  const fetchHistory = async () => {
+    setHistoryError('')
+    setIsHistoryLoading(true)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/analysis/history`)
+
+      if (!response.ok) {
+        throw new Error('Geçmiş analizler alınamadı.')
+      }
+
+      const data: AnalysisHistoryItem[] = await response.json()
+      setHistory(data)
+    } catch {
+      setHistoryError('Analiz geçmişi alınamadı. Backend API çalışıyor mu kontrol edin.')
+    } finally {
+      setIsHistoryLoading(false)
+    }
+  }
 
   const analyzeUrl = async () => {
     setError('')
@@ -57,6 +90,7 @@ function App() {
 
       const data: AnalysisResponse = await response.json()
       setResult(data)
+      await fetchHistory()
     } catch {
       setError('Backend bağlantısı kurulamadı. API çalışıyor mu kontrol edin.')
     } finally {
@@ -90,6 +124,7 @@ function App() {
 
       const data: AnalysisResponse = await response.json()
       setResult(data)
+      await fetchHistory()
     } catch {
       setError('Backend bağlantısı kurulamadı. API çalışıyor mu kontrol edin.')
     } finally {
@@ -120,7 +155,7 @@ function App() {
         <div className="status-card">
           <span>Backend API</span>
           <strong>http://localhost:5223</strong>
-          <small>URL ve e-posta analiz endpointleri hazırlandı.</small>
+          <small>URL analizi, e-posta analizi ve analiz geçmişi endpointleri hazırlandı.</small>
         </div>
       </section>
 
@@ -258,6 +293,46 @@ function App() {
             )}
           </section>
         </div>
+      </section>
+
+      <section className="panel history-panel">
+        <div className="history-header">
+          <div>
+            <h2>Geçmiş Analizler</h2>
+            <p>
+              Uygulama açık kaldığı sürece yapılan URL ve e-posta analizleri burada listelenir.
+              Bu yapı daha sonra PostgreSQL veritabanına taşınacaktır.
+            </p>
+          </div>
+
+          <button className="secondary-button" onClick={fetchHistory} disabled={isHistoryLoading}>
+            {isHistoryLoading ? 'Yükleniyor...' : 'Geçmişi Yenile'}
+          </button>
+        </div>
+
+        {historyError && <div className="error-box">{historyError}</div>}
+
+        {history.length === 0 && !historyError ? (
+          <div className="empty-state">
+            <strong>Henüz geçmiş analiz yok.</strong>
+            <span>Bir analiz yaptığınızda kayıtlar burada görünecek.</span>
+          </div>
+        ) : (
+          <div className="history-list">
+            {history.map((item) => (
+              <article className="history-card" key={item.analysisId}>
+                <div>
+                  <strong>{item.analysisType}</strong>
+                  <span className={getRiskClass(item.riskLevel)}>{item.riskLevel}</span>
+                </div>
+                <p>{item.inputPreview}</p>
+                <small>
+                  Risk skoru: {item.riskScore}/100 • {new Date(item.analyzedAtUtc).toLocaleString('tr-TR')}
+                </small>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   )
